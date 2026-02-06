@@ -1,42 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import type { NewsItem, Sentiment } from "@/types";
-
-function CustomTooltip({ active, payload }: { active?: boolean; payload?: { name: string; value: number }[] }) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="rounded-lg bg-card border border-white/20 px-3 py-2 shadow-lg">
-      {payload.map((p, i) => (
-        <div key={i} className="text-sm text-gray-200">
-          {String(p.name)}: {Number(p.value)}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function CustomLegend({ payload }: { payload?: Array<Record<string, unknown>> }) {
-  if (!payload?.length) return null;
-  return (
-    <ul className="flex flex-wrap justify-center gap-3 text-sm">
-      {payload.map((entry, i) => {
-        const label = typeof entry.value === "string" ? entry.value : typeof entry.name === "string" ? entry.name : "";
-        const color = typeof entry.color === "string" ? entry.color : "#94a3b8";
-        return (
-          <li key={i} className="flex items-center gap-2">
-            <span
-              className="inline-block w-3 h-3 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-            <span className="text-gray-300">{label}</span>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
 
 interface TrendAnalysisProps {
   items: NewsItem[];
@@ -64,6 +29,16 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
       .map(([name, value]) => ({ name, value, fill: SENTIMENT_COLORS[name as Sentiment] }));
   }, [items]);
 
+  const total = sentimentCounts.reduce((acc, s) => acc + s.value, 0);
+  const pieSegments = useMemo(() => {
+    let acc = 0;
+    return sentimentCounts.map((s) => {
+      const start = acc;
+      acc += s.value / total;
+      return { ...s, start: start * 100, end: acc * 100 };
+    });
+  }, [sentimentCounts, total]);
+
   const wordFreq = useMemo(() => {
     const count: Record<string, number> = {};
     items.forEach((item) => {
@@ -85,28 +60,26 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
       <h3 className="font-semibold text-gray-100">트렌드 분석</h3>
 
       {sentimentCounts.length > 0 ? (
-        <div className="h-[200px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={sentimentCounts}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={80}
-                paddingAngle={2}
-                label={({ name, value }: { name?: string; value?: number }) => `${String(name ?? "")} ${Number(value ?? 0)}`}
-              >
-                {sentimentCounts.map((entry, i) => (
-                  <Cell key={i} fill={entry.fill} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend content={<CustomLegend />} />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="space-y-4">
+          <div
+            className="w-40 h-40 mx-auto rounded-full"
+            style={{
+              background: `conic-gradient(${pieSegments.map((s) => `${s.fill} ${s.start}% ${s.end}%`).join(", ")})`,
+            }}
+          />
+          <ul className="flex flex-wrap justify-center gap-3 text-sm">
+            {sentimentCounts.map((s, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span
+                  className="inline-block w-3 h-3 rounded-full shrink-0"
+                  style={{ backgroundColor: s.fill }}
+                />
+                <span className="text-gray-300">
+                  {s.name} {s.value}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       ) : (
         <p className="text-sm text-muted">뉴스를 불러온 뒤 ‘처리 및 아카이빙’을 실행하면 감정 분석이 표시됩니다.</p>
