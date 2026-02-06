@@ -15,7 +15,7 @@ interface NewsModalProps {
 
 function slugify(s: string): string {
   return s
-    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .replace(/[^A-Za-z0-9\u3131-\uD79D\s-]/g, "")
     .trim()
     .slice(0, 50)
     .replace(/\s+/g, "-");
