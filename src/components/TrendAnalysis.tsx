@@ -57,8 +57,8 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
   const maxFreq = Math.max(...wordFreq.map((w) => w.value), 1);
 
   return (
-    <div className="rounded-xl bg-card border border-white/10 p-4 space-y-6">
-      <h3 className="font-semibold text-gray-100">트렌드 분석</h3>
+    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-4 space-y-6">
+      <h3 className="font-semibold text-gray-900">트렌드 분석</h3>
 
       {sentimentCounts.length > 0 ? (
         <div className="space-y-4">
@@ -75,7 +75,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
                   className="inline-block w-3 h-3 rounded-full shrink-0"
                   style={{ backgroundColor: s.fill }}
                 />
-                <span className="text-gray-300">
+                <span className="text-gray-600">
                   {safeText(s.name)} {safeText(s.value)}
                 </span>
               </li>
@@ -83,11 +83,11 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
           </ul>
         </div>
       ) : (
-        <p className="text-sm text-muted">뉴스를 불러온 뒤 ‘처리 및 아카이빙’을 실행하면 감정 분석이 표시됩니다.</p>
+        <p className="text-sm text-gray-500">뉴스를 불러온 뒤 ‘처리 및 아카이빙’을 실행하면 감정 분석이 표시됩니다.</p>
       )}
 
       <div>
-        <h4 className="text-sm font-medium text-gray-300 mb-2">키워드 워드클라우드</h4>
+        <h4 className="text-sm font-medium text-gray-600 mb-2">키워드 워드클라우드</h4>
         <div className="word-cloud-wrap min-h-[120px]">
           {wordFreq.length > 0 ? (
             wordFreq.map((w, i) => {
@@ -95,7 +95,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
               return (
                 <span
                   key={i}
-                  className="text-gray-300 hover:text-accent"
+                  className="text-gray-600 hover:text-accent"
                   style={{
                     fontSize: `${Math.max(12, Math.min(24, 12 * scale))}px`,
                   }}
@@ -105,7 +105,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
               );
             })
           ) : (
-            <span className="text-muted text-sm">키워드 없음</span>
+            <span className="text-gray-500 text-sm">키워드 없음</span>
           )}
         </div>
       </div>

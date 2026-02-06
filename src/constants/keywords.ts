@@ -1,0 +1,30 @@
+/** 뉴스 검색용 키워드 목록 (체크해서 선택) */
+export const KEYWORD_OPTIONS = [
+  { id: "ai", label: "인공지능", query: "artificial intelligence AI" },
+  { id: "semiconductor", label: "반도체", query: "semiconductor chip" },
+  { id: "space", label: "우주 탐사", query: "space exploration" },
+  { id: "quantum", label: "양자 컴퓨터", query: "quantum computing" },
+  { id: "robotics", label: "로봇 공학", query: "robotics" },
+  { id: "cybersecurity", label: "사이버 보안", query: "cybersecurity" },
+  { id: "global-economy", label: "글로벌 경제", query: "global economy" },
+  { id: "startup", label: "스타트업", query: "startup" },
+  { id: "crypto", label: "가상화폐", query: "cryptocurrency" },
+  { id: "renewable", label: "재생 에너지", query: "renewable energy" },
+  { id: "climate", label: "기후 변화", query: "climate change" },
+  { id: "geopolitics", label: "지정학", query: "geopolitics" },
+  { id: "future-work", label: "미래의 노동", query: "future of work" },
+  { id: "edtech", label: "에듀테크", query: "edtech education technology" },
+  { id: "aging", label: "고령화 사회", query: "aging society" },
+  { id: "mental-health", label: "정신 건강", query: "mental health" },
+  { id: "digital-art", label: "디지털 아트", query: "digital art" },
+  { id: "education", label: "교육", query: "education" },
+  { id: "humanities", label: "인문학", query: "humanities" },
+  { id: "philosophy", label: "철학", query: "philosophy" },
+  { id: "society", label: "사회", query: "society" },
+  { id: "climate-topic", label: "기후", query: "climate" },
+  { id: "environment", label: "환경", query: "environment" },
+  { id: "science", label: "과학", query: "science" },
+  { id: "politics", label: "정치", query: "politics" },
+] as const;
+
+export type KeywordId = (typeof KEYWORD_OPTIONS)[number]["id"];

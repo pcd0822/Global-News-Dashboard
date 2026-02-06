@@ -13,7 +13,8 @@ import ReviewSection from "@/components/ReviewSection";
 import SettingsPanel from "@/components/SettingsPanel";
 
 export default function DashboardPage() {
-  const { keyword, newsCount } = useSettingsStore();
+  const { newsCount, getQuery } = useSettingsStore();
+  const keyword = getQuery();
   const { items, loading, error, setItems, setLoading, setError, updateItem } = useNewsStore();
 
   const [selectedNews, setSelectedNews] = useState<typeof items[0] | null>(null);
@@ -66,15 +67,15 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-surface/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-100">Global News Dashboard</h1>
+          <h1 className="text-xl font-bold text-gray-900">Global News Dashboard</h1>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={fetchNews}
               disabled={loading}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
             >
               <IconRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
               새로고침
@@ -91,7 +92,7 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
-              className="p-2 rounded-lg hover:bg-white/10 text-muted hover:text-white"
+              className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-gray-900"
               aria-label="설정"
             >
               <IconSettings className="w-5 h-5" />
@@ -102,7 +103,7 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {error && (
-          <div className="mb-4 p-4 rounded-lg bg-rose-500/20 text-rose-400 text-sm">
+          <div className="mb-4 p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">
             {safeText(error)}
           </div>
         )}
@@ -110,7 +111,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Section A: Today's Headlines (main) */}
           <section className="lg:col-span-3">
-            <h2 className="text-lg font-semibold text-gray-100 mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Today&apos;s Headlines
             </h2>
             {loading ? (
@@ -118,12 +119,12 @@ export default function DashboardPage() {
                 {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="h-[140px] rounded-xl bg-card border border-white/10 animate-pulse"
+                    className="h-[160px] rounded-xl bg-white border border-gray-200 animate-pulse"
                   />
                 ))}
               </div>
             ) : items.length === 0 ? (
-              <p className="text-muted">뉴스가 없습니다. 설정에서 키워드를 확인하거나 새로고침하세요.</p>
+              <p className="text-gray-500">뉴스가 없습니다. 설정에서 키워드를 선택하거나 새로고침하세요.</p>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 {items.map((item, i) => (
@@ -161,7 +162,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
             onClick={() => setSettingsOpen(false)}
           >
             <motion.div
@@ -169,9 +170,9 @@ export default function DashboardPage() {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl bg-card border border-white/10 p-6"
+              className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-xl p-6"
             >
-              <h3 className="text-lg font-semibold text-gray-100 mb-4">설정</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">설정</h3>
               <SettingsPanel onClose={() => setSettingsOpen(false)} />
             </motion.div>
           </motion.div>

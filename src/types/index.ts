@@ -13,10 +13,13 @@ export interface NewsItem {
   summary?: string;
   summaryTranslated?: string;
   keywords?: string[];
+  /** 조회수 (API에서 제공 시) */
+  viewCount?: number | null;
 }
 
 export interface UserSettings {
-  keyword: string;
+  /** 선택된 키워드 ID 목록 */
+  selectedKeywordIds: string[];
   newsCount: number;
 }
 

@@ -35,24 +35,24 @@ export default function ReviewSection({ topic }: ReviewSectionProps) {
   }, [topic, targetDate]);
 
   return (
-    <div className="rounded-xl bg-card border border-white/10 p-4">
-      <h3 className="font-semibold text-gray-100 mb-3">과거의 오늘 (Review)</h3>
+    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-4">
+      <h3 className="font-semibold text-gray-900 mb-3">과거의 오늘 (Review)</h3>
       <div className="flex gap-2 mb-3">
         <select
           value={dateOffset}
           onChange={(e) => setDateOffset(Number(e.target.value))}
-          className="rounded-lg bg-white/10 border border-white/20 text-gray-200 text-sm px-3 py-2"
+          className="rounded-lg border border-gray-200 bg-white text-gray-800 text-sm px-3 py-2"
         >
           <option value={365}>1년 전</option>
           <option value={730}>2년 전</option>
           <option value={1095}>3년 전</option>
         </select>
-        <span className="text-sm text-muted self-center">{targetDate}</span>
+        <span className="text-sm text-gray-500 self-center">{targetDate}</span>
       </div>
-      {loading && <p className="text-sm text-muted">불러오는 중...</p>}
-      {error && <p className="text-sm text-rose-400">{safeText(error)}</p>}
+      {loading && <p className="text-sm text-gray-500">불러오는 중...</p>}
+      {error && <p className="text-sm text-rose-600">{safeText(error)}</p>}
       {!loading && !error && items.length === 0 && (
-        <p className="text-sm text-muted">해당 날짜의 아카이브가 없습니다.</p>
+        <p className="text-sm text-gray-500">해당 날짜의 아카이브가 없습니다.</p>
       )}
       <ul className="space-y-2 max-h-[280px] overflow-y-auto">
         {items.map((row, i) => (
@@ -65,7 +65,7 @@ export default function ReviewSection({ topic }: ReviewSectionProps) {
             >
               {safeText(row.titleTranslated || row.titleOriginal)}
             </a>
-            <p className="text-muted text-xs mt-0.5">{safeText(row.sentiment)}</p>
+            <p className="text-gray-500 text-xs mt-0.5">{safeText(row.sentiment)}</p>
           </li>
         ))}
       </ul>
