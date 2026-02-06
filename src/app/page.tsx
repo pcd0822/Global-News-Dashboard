@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { safeText } from "@/lib/safeRender";
 import { motion, AnimatePresence } from "framer-motion";
 import { IconSettings, IconRefreshCw, IconArchive } from "@/components/Icons";
 import { useSettingsStore } from "@/store/settingsStore";
@@ -102,7 +103,7 @@ export default function DashboardPage() {
       <main className="max-w-7xl mx-auto px-4 py-6">
         {error && (
           <div className="mb-4 p-4 rounded-lg bg-rose-500/20 text-rose-400 text-sm">
-            {error}
+            {safeText(error)}
           </div>
         )}
 

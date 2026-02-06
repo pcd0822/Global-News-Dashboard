@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { safeText } from "@/lib/safeRender";
 import type { ProcessedNewsRow } from "@/types";
 
 interface ReviewSectionProps {
@@ -49,7 +50,7 @@ export default function ReviewSection({ topic }: ReviewSectionProps) {
         <span className="text-sm text-muted self-center">{targetDate}</span>
       </div>
       {loading && <p className="text-sm text-muted">불러오는 중...</p>}
-      {error && <p className="text-sm text-rose-400">{error}</p>}
+      {error && <p className="text-sm text-rose-400">{safeText(error)}</p>}
       {!loading && !error && items.length === 0 && (
         <p className="text-sm text-muted">해당 날짜의 아카이브가 없습니다.</p>
       )}
@@ -62,9 +63,9 @@ export default function ReviewSection({ topic }: ReviewSectionProps) {
               rel="noopener noreferrer"
               className="text-accent hover:underline line-clamp-2"
             >
-              {row.titleTranslated || row.titleOriginal}
+              {safeText(row.titleTranslated || row.titleOriginal)}
             </a>
-            <p className="text-muted text-xs mt-0.5">{row.sentiment}</p>
+            <p className="text-muted text-xs mt-0.5">{safeText(row.sentiment)}</p>
           </li>
         ))}
       </ul>

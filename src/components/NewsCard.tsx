@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { safeText } from "@/lib/safeRender";
 import type { NewsItem } from "@/types";
 
 interface NewsCardProps {
@@ -32,14 +33,14 @@ export default function NewsCard({ item, index, onClick }: NewsCardProps) {
     >
       <div className="p-5 flex flex-col h-full min-h-[140px]">
         <h3 className="font-semibold text-lg line-clamp-2 text-gray-100 mb-2">
-          {item.title}
+          {safeText(item.title)}
         </h3>
-        <p className="text-sm text-muted line-clamp-2 flex-1">{item.snippet}</p>
+        <p className="text-sm text-muted line-clamp-2 flex-1">{safeText(item.snippet)}</p>
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-          {item.source && (
-            <span className="text-xs text-muted">{item.source}</span>
+          {safeText(item.source) && (
+            <span className="text-xs text-muted">{safeText(item.source)}</span>
           )}
-          {item.sentiment && (
+          {safeText(item.sentiment) && (
             <span
               className={`text-xs px-2 py-0.5 rounded-full ${
                 item.sentiment === "Positive"
@@ -49,7 +50,7 @@ export default function NewsCard({ item, index, onClick }: NewsCardProps) {
                     : "bg-slate-500/20 text-slate-400"
               }`}
             >
-              {item.sentiment}
+              {safeText(item.sentiment)}
             </span>
           )}
         </div>

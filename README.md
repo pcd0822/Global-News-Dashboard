@@ -30,6 +30,19 @@ npm run dev
 
 브라우저에서 [http://localhost:3000](http://localhost:3000) 접속.
 
+**React 오류 #31(Objects are not valid as a React child)이 나올 때:**  
+캐시를 지우고 다시 빌드하세요.
+
+```bash
+# Windows (PowerShell)
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue; npm run build
+
+# macOS / Linux
+rm -rf .next && npm run build
+```
+
+배포 후에도 같은 오류가 나면, 배포 플랫폼에서 **캐시 없이 새로 빌드**하도록 설정하세요.
+
 ## 기능 요약
 
 1. **설정:** 관심 주제(키워드), 매일 수집 뉴스 개수(N) 저장 (로컬 저장소 유지)

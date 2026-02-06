@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { safeText } from "@/lib/safeRender";
 import type { NewsItem, Sentiment } from "@/types";
 
 interface TrendAnalysisProps {
@@ -75,7 +76,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
                   style={{ backgroundColor: s.fill }}
                 />
                 <span className="text-gray-300">
-                  {s.name} {s.value}
+                  {safeText(s.name)} {safeText(s.value)}
                 </span>
               </li>
             ))}
@@ -99,7 +100,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
                     fontSize: `${Math.max(12, Math.min(24, 12 * scale))}px`,
                   }}
                 >
-                  {w.text}
+                  {safeText(w.text)}
                 </span>
               );
             })

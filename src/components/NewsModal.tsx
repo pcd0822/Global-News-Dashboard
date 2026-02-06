@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IconX, IconCopy, IconExternalLink } from "@/components/Icons";
+import { safeText } from "@/lib/safeRender";
 import type { NewsItem } from "@/types";
 
 interface NewsModalProps {
@@ -60,7 +61,7 @@ export default function NewsModal({ item, onClose }: NewsModalProps) {
         >
           <div className="p-6 overflow-y-auto flex-1">
             <div className="flex items-start justify-between gap-4 mb-4">
-              <h2 className="text-xl font-bold text-gray-100 pr-8">{title}</h2>
+              <h2 className="text-xl font-bold text-gray-100 pr-8">{safeText(title)}</h2>
               <button
                 type="button"
                 onClick={onClose}
@@ -101,16 +102,16 @@ export default function NewsModal({ item, onClose }: NewsModalProps) {
             </div>
 
             <div className="prose prose-invert prose-sm max-w-none mb-4">
-              <p className="text-gray-300 whitespace-pre-wrap">{summary}</p>
+              <p className="text-gray-300 whitespace-pre-wrap">{safeText(summary)}</p>
             </div>
 
             {item.keywords && item.keywords.length > 0 && (
               <p className="text-sm text-muted mb-2">
-                키워드: {item.keywords.join(", ")}
+                키워드: {Array.isArray(item.keywords) ? item.keywords.map((k) => safeText(k)).join(", ") : ""}
               </p>
             )}
             {item.sentiment && (
-              <p className="text-sm text-muted">감정: {item.sentiment}</p>
+              <p className="text-sm text-muted">감정: {safeText(item.sentiment)}</p>
             )}
           </div>
 
