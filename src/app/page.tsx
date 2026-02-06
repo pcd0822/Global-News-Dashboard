@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IconSettings, IconRefreshCw, IconArchive } from "@/components/Icons";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useNewsStore } from "@/store/newsStore";
+import { useMounted } from "@/hooks/useMounted";
 import NewsCard from "@/components/NewsCard";
 import NewsModal from "@/components/NewsModal";
 import TrendAnalysis from "@/components/TrendAnalysis";
@@ -15,14 +16,16 @@ import SettingsPanel from "@/components/SettingsPanel";
 import TodaySummaryPanel from "@/components/TodaySummaryPanel";
 
 export default function DashboardPage() {
+  const mounted = useMounted();
   const { newsCount, getQuery, searchPeriod } = useSettingsStore();
-  const keyword = getQuery();
+  const keyword = mounted ? getQuery() : "world news";
   const { items, loading, error, setItems, setLoading, setError, updateItem } = useNewsStore();
 
   const [selectedNews, setSelectedNews] = useState<typeof items[0] | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [summaryPanelOpen, setSummaryPanelOpen] = useState(false);
   const [archiving, setArchiving] = useState(false);
+  const [activeTab, setActiveTab] = useState<"headlines" | "stats">("headlines");
 
   const fetchNews = useCallback(() => {
     setLoading(true);
@@ -38,8 +41,8 @@ export default function DashboardPage() {
   }, [keyword, newsCount, searchPeriod, setItems, setLoading, setError]);
 
   useEffect(() => {
-    fetchNews();
-  }, [fetchNews]);
+    if (mounted) fetchNews();
+  }, [mounted, fetchNews]);
 
   const handleProcessAndArchive = () => {
     if (items.length === 0) return;
@@ -68,6 +71,21 @@ export default function DashboardPage() {
       .catch((e) => setError(e.message))
       .finally(() => setArchiving(false));
   };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-surface">
+        <header className="sticky top-0 z-40 border-b border-pastel-lavender/30 bg-white/95 backdrop-blur shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 className="text-xl font-bold text-gray-700">Global News Dashboard</h1>
+          </div>
+        </header>
+        <main className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-center min-h-[50vh]">
+          <p className="text-gray-500">로딩 중...</p>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-surface">
@@ -112,64 +130,93 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Section A: Today's Headlines (main) */}
-          <section className="lg:col-span-3">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">
-              Today&apos;s Headlines
-            </h2>
-            {loading ? (
-              <div className="grid gap-4 sm:grid-cols-2">
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-[180px] rounded-xl bg-white border border-pastel-lavender/30 animate-pulse"
-                  />
-                ))}
-              </div>
-            ) : items.length === 0 ? (
-              <p className="text-gray-500">뉴스가 없습니다. 설정에서 키워드를 선택하거나 새로고침하세요.</p>
-            ) : (
-              <div className="grid gap-4 sm:grid-cols-2">
-                {items.map((item, i) => (
-                  <NewsCard
-                    key={item.id}
-                    item={item}
-                    index={i}
-                    onClick={() => setSelectedNews(item)}
-                    onUpdateItem={updateItem}
-                  />
-                ))}
-              </div>
-            )}
-
-            <div className="mt-8">
-              <h2 className="text-lg font-semibold text-gray-700 mb-3">Today Issues Summary</h2>
-              <p className="text-sm text-gray-500 mb-3">
-                오늘 수집된 기사들의 특징을 리포트 형식으로 요약합니다.
-              </p>
-              <button
-                type="button"
-                onClick={() => setSummaryPanelOpen(true)}
-                disabled={items.length === 0}
-                className="px-4 py-2 rounded-lg bg-pastel-lavender/80 text-gray-700 hover:bg-pastel-lavender disabled:opacity-50"
-              >
-                리포트 보기
-              </button>
-            </div>
-          </section>
-
-          {/* Section B & C: Sidebar */}
-          <aside className="space-y-6">
-            <TrendAnalysis items={items} />
-            <ReviewSection topic={keyword} />
-          </aside>
+        {/* 상단 탭 */}
+        <div className="flex gap-1 mb-6 border-b border-pastel-lavender/40">
+          <button
+            type="button"
+            onClick={() => setActiveTab("headlines")}
+            className={`px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab === "headlines"
+                ? "bg-white border border-b-0 border-pastel-lavender/40 text-gray-800 shadow-sm -mb-px"
+                : "text-gray-500 hover:text-gray-700 hover:bg-pastel-lavender/20"
+            }`}
+          >
+            Today&apos;s Headlines
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("stats")}
+            className={`px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab === "stats"
+                ? "bg-white border border-b-0 border-pastel-lavender/40 text-gray-800 shadow-sm -mb-px"
+                : "text-gray-500 hover:text-gray-700 hover:bg-pastel-lavender/20"
+            }`}
+          >
+            주제별 통계
+          </button>
         </div>
 
-        {/* 주제별 통계: 감정 추이, 키워드 히트맵, 코퍼스, 급상승 */}
-        <div className="mt-8">
+        {activeTab === "headlines" && (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <section className="lg:col-span-3 space-y-6">
+              {/* Today Issues Summary — 맨 위 */}
+              <div className="rounded-xl bg-white border border-pastel-lavender/30 shadow-sm p-4">
+                <h2 className="text-lg font-bold text-gray-700 mb-2">Today Issues Summary</h2>
+                <p className="text-sm text-gray-500 mb-3">
+                  오늘 수집된 기사들의 특징을 리포트 형식으로 요약합니다.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSummaryPanelOpen(true)}
+                  disabled={items.length === 0}
+                  className="px-4 py-2 rounded-lg bg-pastel-lavender/80 text-gray-700 hover:bg-pastel-lavender disabled:opacity-50"
+                >
+                  리포트 보기
+                </button>
+              </div>
+
+              {/* 헤드라인 카드 */}
+              <div>
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">
+                  Today&apos;s Headlines
+                </h2>
+                {loading ? (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {[...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="h-[180px] rounded-xl bg-white border border-pastel-lavender/30 animate-pulse"
+                      />
+                    ))}
+                  </div>
+                ) : items.length === 0 ? (
+                  <p className="text-gray-500">뉴스가 없습니다. 설정에서 키워드를 선택하거나 새로고침하세요.</p>
+                ) : (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {items.map((item, i) => (
+                      <NewsCard
+                        key={item.id}
+                        item={item}
+                        index={i}
+                        onClick={() => setSelectedNews(item)}
+                        onUpdateItem={updateItem}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+
+            <aside className="space-y-6">
+              <TrendAnalysis items={items} />
+              <ReviewSection topic={keyword} />
+            </aside>
+          </div>
+        )}
+
+        {activeTab === "stats" && (
           <AnalyticsSection topic={keyword} />
-        </div>
+        )}
       </main>
 
       <AnimatePresence>

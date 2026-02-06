@@ -57,8 +57,8 @@ export default function AnalyticsSection({ topic }: AnalyticsSectionProps) {
   if (!topic.trim()) return null;
 
   return (
-    <section className="rounded-xl bg-white border border-pastel-lavender/30 shadow-sm p-4 space-y-6">
-      <h2 className="text-lg font-semibold text-gray-700">
+    <section className="rounded-xl bg-white border border-pastel-lavender/30 shadow-sm p-6">
+      <h2 className="text-xl font-bold text-gray-700 mb-6">
         주제별 통계 · {safeText(topic)}
       </h2>
 
@@ -70,32 +70,32 @@ export default function AnalyticsSection({ topic }: AnalyticsSectionProps) {
       )}
 
       {!loading && !error && data && (
-        <>
-          {/* 1. 감정 온도계 (Sentiment Index Trend) */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-600 mb-2">
+        <div className="space-y-8">
+          {/* 1. 감정 온도계 */}
+          <div className="border-b border-pastel-cream pb-6">
+            <h3 className="text-base font-bold text-gray-700 mb-1">
               감정 온도계 (Sentiment Index Trend)
             </h3>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-500 mb-3">
               (긍정 기사 수 - 부정 기사 수) / 전체. 0 위는 긍정, 아래는 부정
             </p>
             <SentimentTrendChart data={data.sentimentTrend} />
           </div>
 
-          {/* 2. 키워드 코퍼스 (시트 누적) */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-600 mb-2">
+          {/* 2. 키워드 코퍼스 */}
+          <div className="border-b border-pastel-cream pb-6">
+            <h3 className="text-base font-bold text-gray-700 mb-3">
               키워드 코퍼스 (해당 주제 아카이브)
             </h3>
             <KeywordCorpusViz data={data.keywordCorpus} />
           </div>
 
           {/* 3. 키워드 히트맵 */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-600 mb-2">
+          <div className="border-b border-pastel-cream pb-6">
+            <h3 className="text-base font-bold text-gray-700 mb-1">
               키워드 생명주기 · 히트맵
             </h3>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-500 mb-3">
               날짜(X) × 키워드(Y) 빈도
             </p>
             <KeywordHeatmap data={data.keywordHeatmap} />
@@ -103,12 +103,12 @@ export default function AnalyticsSection({ topic }: AnalyticsSectionProps) {
 
           {/* 4. 급상승 키워드 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-600 mb-2">
+            <h3 className="text-base font-bold text-gray-700 mb-3">
               급상승 키워드 (최근 7일 vs 이전 7일)
             </h3>
             <RisingKeywordsList data={data.risingKeywords} />
           </div>
-        </>
+        </div>
       )}
 
       {!loading && !error && data && data.sentimentTrend.length === 0 && data.keywordCorpus.length === 0 && (

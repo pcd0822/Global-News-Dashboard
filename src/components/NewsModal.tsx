@@ -126,7 +126,7 @@ export default function NewsModal({ item, onClose }: NewsModalProps) {
               {reportLoading ? (
                 <p className="text-gray-500 text-sm">리포트 생성 중...</p>
               ) : reportMarkdown ? (
-                <div className="prose prose-sm max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700 prose-blockquote:border-l-pastel-lavender prose-blockquote:bg-pastel-cream/30 prose-blockquote:py-1 prose-blockquote:px-3 prose-a:text-accent prose-strong:text-gray-800">
+                <div className="prose prose-sm max-w-none prose-headings:text-gray-800 prose-headings:mb-2 prose-p:text-gray-700 prose-p:mb-4 prose-p:leading-relaxed prose-p:first-of-type:mt-0 prose-li:text-gray-700 prose-li:mb-1 prose-blockquote:border-l-pastel-lavender prose-blockquote:bg-pastel-cream/30 prose-blockquote:py-1 prose-blockquote:px-3 prose-blockquote:my-4 prose-a:text-accent prose-strong:text-gray-800">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{reportMarkdown}</ReactMarkdown>
                 </div>
               ) : (

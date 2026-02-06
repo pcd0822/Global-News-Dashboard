@@ -20,8 +20,7 @@ export default function NewsCard({ item, index, onClick, onUpdateItem }: NewsCar
 
   const viewCount = item.viewCount != null && typeof item.viewCount === "number" ? item.viewCount : null;
   const keywords = item.keywords ?? [];
-  const position = index + 1;
-  const cohesion = item.cohesion != null && typeof item.cohesion === "number" ? Math.max(0, Math.min(1, item.cohesion)) : null;
+  const cohesion = item.cohesion != null && typeof item.cohesion === "number" ? Math.max(0, Math.min(1, item.cohesion)) : 0;
   const relativeDate = formatRelativeDate(item.date);
 
   const displayTitle = showTranslated
@@ -94,28 +93,24 @@ export default function NewsCard({ item, index, onClick, onUpdateItem }: NewsCar
             {safeText(item.source) && (
               <span className="text-xs text-muted">{safeText(item.source)}</span>
             )}
-            {viewCount !== null ? (
+            {viewCount !== null && (
               <span className="text-xs text-muted">
                 조회수: {viewCount >= 1000000 ? `${(viewCount / 1000000).toFixed(1)}M` : viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : viewCount}
               </span>
-            ) : (
-              <span className="text-xs text-muted">노출 순위: {position}</span>
             )}
           </div>
-          {cohesion != null && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted shrink-0">Cohesion</span>
-              <div className="flex-1 h-2 rounded-full bg-pastel-lavender/30 overflow-hidden" title={`Cohesion ${Math.round(cohesion * 100)}%`}>
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{
-                    width: `${cohesion * 100}%`,
-                    backgroundColor: cohesion >= 0.8 ? "rgb(88 28 135)" : cohesion >= 0.5 ? "rgb(126 34 206)" : cohesion >= 0.3 ? "rgb(147 51 234)" : "rgb(192 132 252)",
-                  }}
-                />
-              </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted shrink-0">Cohesion</span>
+            <div className="flex-1 h-2 rounded-full bg-pastel-lavender/30 overflow-hidden" title={`Cohesion ${Math.round(cohesion * 100)}%`}>
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${cohesion * 100}%`,
+                  backgroundColor: cohesion >= 0.8 ? "rgb(88 28 135)" : cohesion >= 0.5 ? "rgb(126 34 206)" : cohesion >= 0.3 ? "rgb(147 51 234)" : "rgb(192 132 252)",
+                }}
+              />
             </div>
-          )}
+          </div>
           <div className="flex flex-wrap gap-1.5">
             {keywords.slice(0, 5).map((k, i) => (
               <span
