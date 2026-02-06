@@ -4,6 +4,40 @@ import { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import type { NewsItem, Sentiment } from "@/types";
 
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: { name: string; value: number }[] }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-lg bg-card border border-white/20 px-3 py-2 shadow-lg">
+      {payload.map((p, i) => (
+        <div key={i} className="text-sm text-gray-200">
+          {String(p.name)}: {Number(p.value)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CustomLegend({ payload }: { payload?: Array<Record<string, unknown>> }) {
+  if (!payload?.length) return null;
+  return (
+    <ul className="flex flex-wrap justify-center gap-3 text-sm">
+      {payload.map((entry, i) => {
+        const label = typeof entry.value === "string" ? entry.value : typeof entry.name === "string" ? entry.name : "";
+        const color = typeof entry.color === "string" ? entry.color : "#94a3b8";
+        return (
+          <li key={i} className="flex items-center gap-2">
+            <span
+              className="inline-block w-3 h-3 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <span className="text-gray-300">{label}</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 interface TrendAnalysisProps {
   items: NewsItem[];
 }
@@ -63,14 +97,14 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
                 innerRadius={50}
                 outerRadius={80}
                 paddingAngle={2}
-                label={({ name, value }) => `${name} ${value}`}
+                label={({ name, value }: { name?: string; value?: number }) => `${String(name ?? "")} ${Number(value ?? 0)}`}
               >
                 {sentimentCounts.map((entry, i) => (
                   <Cell key={i} fill={entry.fill} />
                 ))}
               </Pie>
-              <Tooltip />
-              <Legend />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend content={<CustomLegend />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
