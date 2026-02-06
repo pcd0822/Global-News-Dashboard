@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Settings, RefreshCw, Archive } from "lucide-react";
+import { IconSettings, IconRefreshCw, IconArchive } from "@/components/Icons";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useNewsStore } from "@/store/newsStore";
 import NewsCard from "@/components/NewsCard";
@@ -75,7 +75,7 @@ export default function DashboardPage() {
               disabled={loading}
               className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+              <IconRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
               새로고침
             </button>
             <button
@@ -84,7 +84,7 @@ export default function DashboardPage() {
               disabled={items.length === 0 || archiving}
               className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-accent text-white hover:opacity-90 disabled:opacity-50"
             >
-              <Archive className="w-4 h-4" />
+              <IconArchive className="w-4 h-4" />
               {archiving ? "처리 중..." : "처리 및 아카이빙"}
             </button>
             <button
@@ -93,7 +93,7 @@ export default function DashboardPage() {
               className="p-2 rounded-lg hover:bg-white/10 text-muted hover:text-white"
               aria-label="설정"
             >
-              <Settings className="w-5 h-5" />
+              <IconSettings className="w-5 h-5" />
             </button>
           </div>
         </div>

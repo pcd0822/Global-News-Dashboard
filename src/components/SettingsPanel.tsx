@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Settings } from "lucide-react";
+import { IconSettings } from "@/components/Icons";
 import { useSettingsStore } from "@/store/settingsStore";
 
 interface SettingsPanelProps {
@@ -72,7 +72,7 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
     return (
       <div className="rounded-xl bg-card border border-white/10 p-4">
         <h3 className="font-semibold text-gray-100 mb-3 flex items-center gap-2">
-          <Settings className="w-5 h-5" /> 설정
+          <IconSettings className="w-5 h-5" /> 설정
         </h3>
         {form}
       </div>

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Copy, ExternalLink } from "lucide-react";
+import { IconX, IconCopy, IconExternalLink } from "@/components/Icons";
 import type { NewsItem } from "@/types";
 
 interface NewsModalProps {
@@ -67,7 +67,7 @@ export default function NewsModal({ item, onClose }: NewsModalProps) {
                 className="shrink-0 p-2 rounded-lg hover:bg-white/10 text-muted hover:text-white"
                 aria-label="닫기"
               >
-                <X className="w-5 h-5" />
+                <IconX className="w-5 h-5" />
               </button>
             </div>
 
@@ -96,7 +96,7 @@ export default function NewsModal({ item, onClose }: NewsModalProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-sm text-accent hover:underline"
               >
-                원문 보기 <ExternalLink className="w-4 h-4" />
+                원문 보기 <IconExternalLink className="w-4 h-4" />
               </a>
             </div>
 
@@ -120,7 +120,7 @@ export default function NewsModal({ item, onClose }: NewsModalProps) {
               onClick={handleCopy}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white hover:opacity-90"
             >
-              <Copy className="w-4 h-4" />
+              <IconCopy className="w-4 h-4" />
               {copied ? "복사됨" : "옵시디언/노션 복사"}
             </button>
           </div>
