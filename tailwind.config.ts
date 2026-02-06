@@ -9,10 +9,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        surface: "#f8fafc",
+        surface: "#faf8fc",
         card: "#ffffff",
-        accent: "#2563eb",
-        muted: "#64748b",
+        accent: "#8b9dc3",
+        muted: "#7d8a9a",
+        pastel: {
+          mint: "#b8e0d2",
+          lavender: "#d4c5f9",
+          peach: "#ffdab9",
+          sky: "#a8d4f0",
+          pink: "#f5c6d6",
+          sage: "#c5d1c7",
+          cream: "#f5f0e8",
+          lilac: "#e2d4f0",
+        },
       },
       fontFamily: {
         sans: ["system-ui", "Segoe UI", "sans-serif"],

@@ -3,14 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --surface: #f8fafc;
+  --surface: #faf8fc;
   --card: #ffffff;
-  --accent: #2563eb;
-  --muted: #64748b;
+  --accent: #8b9dc3;
+  --muted: #7d8a9a;
+  /* 파스텔 팔레트 */
+  --pastel-mint: #b8e0d2;
+  --pastel-lavender: #d4c5f9;
+  --pastel-peach: #ffdab9;
+  --pastel-sky: #a8d4f0;
+  --pastel-pink: #f5c6d6;
+  --pastel-sage: #c5d1c7;
+  --pastel-cream: #f5f0e8;
+  --pastel-lilac: #e2d4f0;
 }
 
 body {
-  @apply bg-gray-50 text-gray-900 antialiased;
+  @apply antialiased;
+  background-color: var(--surface);
+  color: #4a4a5a;
 }
 
 /* Word cloud container */

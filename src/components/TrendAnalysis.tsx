@@ -8,11 +8,17 @@ interface TrendAnalysisProps {
   items: NewsItem[];
 }
 
-const SENTIMENT_COLORS: Record<Sentiment, string> = {
-  Positive: "#34d399",
-  Negative: "#f87171",
-  Neutral: "#94a3b8",
+const SENTIMENT_PASTEL: Record<Sentiment, string> = {
+  Positive: "#b8e0d2",
+  Negative: "#f5c6d6",
+  Neutral: "#a8d4f0",
 };
+
+const WORD_CLOUD_PASTEL = [
+  "#b8e0d2", "#d4c5f9", "#ffdab9", "#a8d4f0", "#f5c6d6",
+  "#c5d1c7", "#e2d4f0", "#c9e4de", "#e8d5f2", "#fad4b8",
+  "#b5d8eb", "#f0d0d8", "#d0e0d5", "#ddd0ed", "#ffe0c5",
+];
 
 export default function TrendAnalysis({ items }: TrendAnalysisProps) {
   const sentimentCounts = useMemo(() => {
@@ -27,7 +33,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
     });
     return Object.entries(map)
       .filter(([, v]) => v > 0)
-      .map(([name, value]) => ({ name, value, fill: SENTIMENT_COLORS[name as Sentiment] }));
+      .map(([name, value]) => ({ name, value, fill: SENTIMENT_PASTEL[name as Sentiment] }));
   }, [items]);
 
   const total = sentimentCounts.reduce((acc, s) => acc + s.value, 0);
@@ -57,8 +63,8 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
   const maxFreq = Math.max(...wordFreq.map((w) => w.value), 1);
 
   return (
-    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-4 space-y-6">
-      <h3 className="font-semibold text-gray-900">트렌드 분석</h3>
+    <div className="rounded-xl bg-white border border-pastel-lavender/30 shadow-sm p-4 space-y-6">
+      <h3 className="font-semibold text-gray-700">트렌드 분석</h3>
 
       {sentimentCounts.length > 0 ? (
         <div className="space-y-4">
@@ -83,7 +89,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
           </ul>
         </div>
       ) : (
-        <p className="text-sm text-gray-500">뉴스를 불러온 뒤 ‘처리 및 아카이빙’을 실행하면 감정 분석이 표시됩니다.</p>
+        <p className="text-sm text-muted">뉴스를 불러온 뒤 ‘처리 및 아카이빙’을 실행하면 감정 분석이 표시됩니다.</p>
       )}
 
       <div>
@@ -92,12 +98,14 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
           {wordFreq.length > 0 ? (
             wordFreq.map((w, i) => {
               const scale = 0.7 + (w.value / maxFreq) * 0.8;
+              const color = WORD_CLOUD_PASTEL[i % WORD_CLOUD_PASTEL.length];
               return (
                 <span
                   key={i}
-                  className="text-gray-600 hover:text-accent"
+                  className="hover:opacity-90"
                   style={{
                     fontSize: `${Math.max(12, Math.min(24, 12 * scale))}px`,
+                    color,
                   }}
                 >
                   {safeText(w.text)}
@@ -105,7 +113,7 @@ export default function TrendAnalysis({ items }: TrendAnalysisProps) {
               );
             })
           ) : (
-            <span className="text-gray-500 text-sm">키워드 없음</span>
+            <span className="text-muted text-sm">키워드 없음</span>
           )}
         </div>
       </div>

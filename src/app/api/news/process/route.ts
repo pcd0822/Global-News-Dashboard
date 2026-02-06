@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { processNewsItem } from "@/lib/openai";
-import { appendNewsToSheet } from "@/lib/sheets";
+import { appendNewsToSheet, getAllRowsForTopic } from "@/lib/sheets";
+import { buildKeywordCorpus, computeCohesion } from "@/lib/cohesion";
 import type { NewsItem, ProcessedNewsRow } from "@/types";
 
 export async function POST(request: NextRequest) {
@@ -30,29 +31,38 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const rows: ProcessedNewsRow[] = processed.map((p) => ({
-      date: dateStr,
-      topic,
-      titleOriginal: p.title,
-      titleTranslated: p.titleTranslated ?? p.title,
-      link: p.link,
-      summaryOriginal: p.summary ?? p.snippet,
-      summaryTranslated: p.summaryTranslated ?? p.snippet ?? "",
-      sentiment: p.sentiment ?? "Neutral",
-      keywords: (p.keywords ?? []).join(", "),
-    }));
+    const existingRows = await getAllRowsForTopic(topic).catch(() => []);
+    const corpus = buildKeywordCorpus(existingRows);
+
+    const rows: ProcessedNewsRow[] = processed.map((p) => {
+      const keywordsArr = p.keywords ?? [];
+      const cohesion = computeCohesion(keywordsArr, corpus);
+      return {
+        date: dateStr,
+        topic,
+        titleOriginal: p.title,
+        titleTranslated: p.titleTranslated ?? p.title,
+        link: p.link,
+        summaryOriginal: p.summary ?? p.snippet,
+        summaryTranslated: p.summaryTranslated ?? p.snippet ?? "",
+        sentiment: p.sentiment ?? "Neutral",
+        keywords: keywordsArr.join(", "),
+        cohesion,
+      };
+    });
 
     await appendNewsToSheet(rows);
 
     return NextResponse.json({
       success: true,
-      processed: processed.map((p) => ({
+      processed: processed.map((p, i) => ({
         id: p.id,
         title: p.title,
         summary: p.summary,
         summaryTranslated: p.summaryTranslated,
         sentiment: p.sentiment,
         keywords: p.keywords,
+        cohesion: rows[i]?.cohesion,
       })),
     });
   } catch (e) {

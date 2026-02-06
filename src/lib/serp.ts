@@ -11,14 +11,22 @@ export interface SerpNewsResult {
   date?: string;
 }
 
+/** 검색 기간 → SerpApi as_qdr 값 (d1, w1, m1, m2) */
+export const PERIOD_TO_AS_QDR: Record<string, string> = {
+  "1d": "d1",
+  "1w": "w1",
+  "1m": "m1",
+  "2m": "m2",
+};
+
 /**
  * SerpApi Google News 검색.
- * sort=pd (published date) 대신 기본 정렬(관련도/인기) 사용으로 화제성 높은 뉴스 우선.
- * tbm=nws 뉴스 탭 + num으로 개수 제한.
+ * as_qdr로 기간 제한 가능 (지난 1일/1주/1개월/2개월).
  */
 export async function fetchNewsFromSerp(
   query: string,
-  num: number
+  num: number,
+  period?: string
 ): Promise<NewsItem[]> {
   const apiKey = process.env.SERPAPI_API_KEY;
   if (!apiKey) throw new Error("SERPAPI_API_KEY is not set");
@@ -28,9 +36,10 @@ export async function fetchNewsFromSerp(
     q: query,
     api_key: apiKey,
     num: String(Math.min(num, 100)),
-    // 정렬: 관련도/인기 우선 (기본값이 이미 그렇고, sort 지정 안 하면 됨)
-    // gl=us, hl=en 등으로 지역/언어 조절 가능
   });
+
+  const asQdr = period && PERIOD_TO_AS_QDR[period];
+  if (asQdr) params.set("as_qdr", asQdr);
 
   const res = await fetch(`${SERP_API}?${params.toString()}`);
   if (!res.ok) {

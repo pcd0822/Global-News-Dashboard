@@ -11,9 +11,10 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
-  const { selectedKeywordIds, newsCount, setSelectedKeywordIds, setNewsCount } = useSettingsStore();
+  const { selectedKeywordIds, newsCount, searchPeriod, setSelectedKeywordIds, setNewsCount, setSearchPeriod } = useSettingsStore();
   const [localIds, setLocalIds] = useState<string[]>(selectedKeywordIds);
   const [localCount, setLocalCount] = useState(newsCount);
+  const [localPeriod, setLocalPeriod] = useState(searchPeriod);
 
   const handleToggle = (id: string) => {
     setLocalIds((prev) => {
@@ -25,6 +26,7 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
   const handleSave = () => {
     setSelectedKeywordIds(localIds.length ? localIds : [KEYWORD_OPTIONS[0].id]);
     setNewsCount(Math.max(1, Math.min(50, localCount)));
+    setSearchPeriod(localPeriod);
     onClose?.();
   };
 
@@ -34,7 +36,7 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
         <label className="block text-sm font-medium text-gray-700 mb-2">
           관심 주제 (키워드 목록에서 선택)
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto rounded-lg border border-pastel-sage/50 bg-pastel-cream/50 p-3">
           {KEYWORD_OPTIONS.map((opt) => (
             <label
               key={opt.id}
@@ -44,7 +46,7 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
                 type="checkbox"
                 checked={localIds.includes(opt.id)}
                 onChange={() => handleToggle(opt.id)}
-                className="rounded border-gray-300 text-accent focus:ring-accent"
+                className="rounded border-pastel-sage text-pastel-lavender focus:ring-pastel-lavender"
               />
               <span>{opt.label}</span>
             </label>
@@ -53,7 +55,22 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          매일 수집할 뉴스 개수 (N)
+          기사 검색 기간
+        </label>
+        <select
+          value={localPeriod}
+          onChange={(e) => setLocalPeriod(e.target.value as "1d" | "1w" | "1m" | "2m")}
+          className="w-full rounded-lg border border-gray-200 bg-white text-gray-900 px-3 py-2"
+        >
+          <option value="1d">지난 1일</option>
+          <option value="1w">지난 1주</option>
+          <option value="1m">지난 1개월</option>
+          <option value="2m">지난 2개월</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          수집 뉴스 개수 (N)
         </label>
         <input
           type="number"
@@ -68,7 +85,7 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
         <button
           type="button"
           onClick={handleSave}
-          className="px-4 py-2 rounded-lg bg-accent text-white hover:opacity-90"
+          className="px-4 py-2 rounded-lg bg-pastel-lavender/80 text-gray-700 hover:bg-pastel-lavender"
         >
           저장
         </button>
@@ -76,7 +93,7 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300"
+            className="px-4 py-2 rounded-lg bg-pastel-sage/50 text-gray-700 hover:bg-pastel-sage/70"
           >
             취소
           </button>
@@ -87,9 +104,9 @@ export default function SettingsPanel({ onClose, inline }: SettingsPanelProps) {
 
   if (inline) {
     return (
-      <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-4">
-        <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-          <IconSettings className="w-5 h-5 text-gray-600" /> 설정
+      <div className="rounded-xl bg-white border border-pastel-lavender/30 shadow-sm p-4">
+        <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          <IconSettings className="w-5 h-5 text-muted" /> 설정
         </h3>
         {form}
       </div>

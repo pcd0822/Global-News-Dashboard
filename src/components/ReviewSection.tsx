@@ -35,13 +35,13 @@ export default function ReviewSection({ topic }: ReviewSectionProps) {
   }, [topic, targetDate]);
 
   return (
-    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-4">
-      <h3 className="font-semibold text-gray-900 mb-3">과거의 오늘 (Review)</h3>
+    <div className="rounded-xl bg-white border border-pastel-lavender/30 shadow-sm p-4">
+      <h3 className="font-semibold text-gray-700 mb-3">과거의 오늘 (Review)</h3>
       <div className="flex gap-2 mb-3">
         <select
           value={dateOffset}
           onChange={(e) => setDateOffset(Number(e.target.value))}
-          className="rounded-lg border border-gray-200 bg-white text-gray-800 text-sm px-3 py-2"
+          className="rounded-lg border border-pastel-sage/50 bg-white text-gray-700 text-sm px-3 py-2"
         >
           <option value={365}>1년 전</option>
           <option value={730}>2년 전</option>

@@ -6,12 +6,14 @@ import type { UserSettings } from "@/types";
 const DEFAULT_SETTINGS: UserSettings = {
   selectedKeywordIds: ["ai"],
   newsCount: 10,
+  searchPeriod: "1w",
 };
 
 interface SettingsState extends UserSettings {
   setSelectedKeywordIds: (ids: string[]) => void;
   toggleKeyword: (id: string) => void;
   setNewsCount: (newsCount: number) => void;
+  setSearchPeriod: (searchPeriod: UserSettings["searchPeriod"]) => void;
   setSettings: (settings: Partial<UserSettings>) => void;
   reset: () => void;
   /** API용 검색 쿼리 (선택된 키워드의 query 결합) */
@@ -32,6 +34,7 @@ export const useSettingsStore = create<SettingsState>()(
           return { selectedKeywordIds: next.length ? next : [KEYWORD_OPTIONS[0].id] };
         }),
       setNewsCount: (newsCount) => set({ newsCount: Math.max(1, Math.min(50, newsCount)) }),
+      setSearchPeriod: (searchPeriod) => set({ searchPeriod }),
       setSettings: (settings) => set((s) => ({ ...s, ...settings })),
       reset: () => set(DEFAULT_SETTINGS),
       getQuery: () => {
